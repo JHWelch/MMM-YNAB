@@ -6,7 +6,14 @@ Module.register("MMM-YNAB", {
     },
 
     start: function () {
-        this.sendSocketNotification('YNAB_SET_CONFIG', this.config);
+        Log.info(`Starting module: ${this.name}`);
+        const self = this;
+
+        this.getData();
+
+        setInterval(() => {
+          self.getData();
+        }, 90000);
     },
 
     getDom: function () {
@@ -34,5 +41,9 @@ Module.register("MMM-YNAB", {
         return [
             this.file('MMM-YNAB.css')
         ]
+    },
+
+    getData: function() {
+        this.sendSocketNotification('YNAB_GET_DATA', this.config);
     }
 });
