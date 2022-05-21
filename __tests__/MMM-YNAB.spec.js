@@ -102,7 +102,7 @@ describe('MMM-YNAB', () => {
         test('Displays category budgets', () => {
             MMMYNAB.result = mockData;
 
-            var expectedHtml ='<div class="xsmall"><span class="ynab-name">Household</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Pets</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Grocery</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Lunch</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Kids Clothes</span><span class="ynab-balance">$0.00</span></div>'
+            var expectedHtml ='<div class="xsmall"><span class="ynab-name">Household</span><span class="ynab-balance">$10.00</span><span class="ynab-name">Pets</span><span class="ynab-balance">$2.00</span><span class="ynab-name">Grocery</span><span class="ynab-balance">$5.00</span><span class="ynab-name">Lunch</span><span class="ynab-balance">$7.50</span><span class="ynab-name">Kids Clothes</span><span class="ynab-balance">$3.00</span></div>'
 
             expect(MMMYNAB.getDom().outerHTML).toBe(expectedHtml);
         });
