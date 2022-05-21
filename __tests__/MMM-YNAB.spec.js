@@ -1,3 +1,5 @@
+const { mockData } = require('../__mocks__/mockData');
+
 describe('MMM-YNAB', () => {
     beforeAll(() => {
         require('../__mocks__/Module');
@@ -74,6 +76,19 @@ describe('MMM-YNAB', () => {
           );
         });
 
+    });
 
-      });
+    describe('YNAB_UPDATE socket notification recieved', () => {
+        test('DOM is updated', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', mockData);
+
+            expect(MMMYNAB.updateDom).toHaveBeenCalledWith(0);
+        })
+
+        test('Results are recorded from payload', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', mockData);
+
+            expect(MMMYNAB.result).toBe(mockData);
+        });
+    });
 });
