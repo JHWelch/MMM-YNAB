@@ -15,7 +15,6 @@ module.exports = NodeHelper.create({
 		if (payload.budgetId) {
 			ynabBudgetId = payload.budgetId;
 			this.updateBudget(payload);
-			// this.setInterval();
 
 			return;
 		}
@@ -23,16 +22,9 @@ module.exports = NodeHelper.create({
 		ynabAPI.budgets.getBudgets().then(budgetsResponse => {
 			ynabBudgetId = budgetsResponse.data.budgets[0].id;
 			this.updateBudget(payload);
-			// this.setInterval();
 		}).catch(e => {
 			console.log("error: " + e);
 		});
-	},
-
-	setInterval () {
-		if (!interval) {
-			interval = setInterval(this.updateBudget, 90000);
-		}
 	},
 
 	async updateBudget (payload) {
