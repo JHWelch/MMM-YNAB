@@ -29,9 +29,10 @@ Module.register("MMM-YNAB", {
     },
 
     socketNotificationReceived: function (notification, payload) {
-        console.log("notification: " + notification);
-        console.log("payload: " + JSON.stringify(payload));
-        if (notification == "YNAB_UPDATE") {
+        if (
+            notification == "YNAB_UPDATE" &&
+            (!this.config.budgetId || this.config.budgetId == payload.budgetId)
+        ) {
             this.result = payload.budgets;
             this.updateDom(0);
         }

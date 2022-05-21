@@ -31,13 +31,13 @@ describe('MMM-YNAB', () => {
 
     describe('start', () => {
         const originalInterval = setInterval;
-        const configObject = {
+        const config = {
             token: 'YNAB_TOKEN',
             categories: [ "Household", "Pets", "Grocery", "Lunch", "Kids Clothes", "Restaurants", "Spontaneous Fun" ],
         };
 
         beforeEach(() => {
-          MMMYNAB.setConfig(configObject);
+          MMMYNAB.setConfig(config);
           global.setInterval = jest.fn();
         });
 
@@ -60,7 +60,7 @@ describe('MMM-YNAB', () => {
           expect(MMMYNAB.sendSocketNotification).toHaveBeenNthCalledWith(
             1,
             'YNAB_GET_DATA',
-            configObject
+            config
           );
         });
 
@@ -72,15 +72,15 @@ describe('MMM-YNAB', () => {
           expect(MMMYNAB.sendSocketNotification).toHaveBeenNthCalledWith(
             1,
             'YNAB_GET_DATA',
-            configObject
+            config
           );
         });
 
     });
 
-    describe('YNAB_UPDATE socket notification recieved for correct budget id', () => {
+    describe('YNAB_UPDATE socket notification recieved with no budget id specified', () => {
         test('DOM is updated', () => {
-            MMMYNAB.socketNotificationReceived('YNAB_UPDATE',getMockData());
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', getMockData(5));
 
             expect(MMMYNAB.updateDom).toHaveBeenCalledWith(0);
         })
@@ -89,6 +89,52 @@ describe('MMM-YNAB', () => {
             MMMYNAB.socketNotificationReceived('YNAB_UPDATE',getMockData());
 
             expect(MMMYNAB.result).toStrictEqual(getMockData().budgets);
+        });
+    });
+
+    describe('YNAB_UPDATE socket notification recieved with correct budget id ', () => {
+        const config = {
+            budgetId: 5,
+        };
+
+        beforeEach(() => {
+            MMMYNAB.setConfig(config);
+            global.setInterval = jest.fn();
+        });
+
+        test('DOM is updated', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', getMockData(5));
+
+            expect(MMMYNAB.updateDom).toHaveBeenCalledWith(0);
+        })
+
+        test('Results are recorded from payload', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE',getMockData(5));
+
+            expect(MMMYNAB.result).toStrictEqual(getMockData().budgets);
+        });
+    });
+
+    describe('YNAB_UPDATE socket notification recieved for different budget id', () => {
+        const config = {
+            budgetId: 5,
+        };
+
+        beforeEach(() => {
+            MMMYNAB.setConfig(config);
+            global.setInterval = jest.fn();
+        });
+
+        test('DOM is not updated', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', getMockData(10));
+
+            expect(MMMYNAB.updateDom).not.toHaveBeenCalled();
+        })
+
+        test('Results are not recorded from payload', () => {
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', getMockData(10));
+
+            expect(MMMYNAB.result).toEqual([]);
         });
     });
 
