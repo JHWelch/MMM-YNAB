@@ -3,14 +3,13 @@ var NodeHelper = require("node_helper");
 
 module.exports = NodeHelper.create({
 
-	socketNotificationReceived: function (noti, payload) {
+	socketNotificationReceived (noti, payload) {
 		if (noti == "YNAB_GET_DATA") {
 			this.initialize(payload);
 		}
 	},
 
-	initialize: function (payload) {
-		self = this;
+	initialize (payload) {
 		var ynabAPI = new ynab.API(payload.token);
 
 		if (payload.budgetId) {
@@ -30,22 +29,22 @@ module.exports = NodeHelper.create({
 		});
 	},
 
-	setInterval: function () {
+	setInterval () {
 		if (!interval) {
-			interval = setInterval(self.updateBudget, 90000);
+			interval = setInterval(this.updateBudget, 90000);
 		}
 	},
 
-	updateBudget: function (payload) {
+	async updateBudget (payload) {
 		var ynabAPI = new ynab.API(payload.token);
 
-		ynabAPI.categories.getCategories(ynabBudgetId).then(categoriesResponse => {
-			console.log(JSON.stringify(categoriesResponse));
-			const map = [].concat(...Array.from(categoriesResponse.data.category_groups.map(a => Array.from(a.categories)))).reduce((map, o) => { map[o.name] = o; return map; }, new Map());
-			var list = payload.categories.map(a => map[a]).filter(a => a != undefined);
-			self.sendSocketNotification("YNAB_UPDATE", {
-				items: list,
-			});
+		categoriesResponse = ynabAPI.categories.getCategories(ynabBudgetId).then(categoriesResponse => {
+            const map = [].concat(...Array.from(categoriesResponse.data.category_groups.map(a => Array.from(a.categories))))
+                    .reduce((map, o) => { map[o.name] = o; return map; }, new Map());
+
+            var list = payload.categories.map(a => map[a]).filter(a => a != undefined);
+
+            this.sendSocketNotification("YNAB_UPDATE", list);
 		}).catch(e => {
 			console.log("error: " + e);
 		});
