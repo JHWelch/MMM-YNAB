@@ -32,7 +32,7 @@ Module.register("MMM-YNAB", {
         console.log("notification: " + notification);
         console.log("payload: " + JSON.stringify(payload));
         if (notification == "YNAB_UPDATE") {
-            this.result = payload;
+            this.result = payload.budgets;
             this.updateDom(0);
         }
     },

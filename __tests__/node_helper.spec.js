@@ -1,6 +1,6 @@
 
 ynab = require('ynab');
-const { mockData } = require('../__mocks__/mockData');
+const { getMockData } = require('../__mocks__/mockData');
 
 const categories = [ "Household", "Pets", "Grocery", "Lunch", "Kids Clothes", "Restaurants", "Spontaneous Fun" ];
 
@@ -32,11 +32,9 @@ describe('node_helper', () => {
 
             await waitForAsync();
 
-            // done();
-
             expect(helper.sendSocketNotification).toHaveBeenCalledWith(
                 'YNAB_UPDATE',
-                mockData,
+                getMockData(1),
             );
         });
     });

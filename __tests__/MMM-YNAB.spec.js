@@ -1,4 +1,4 @@
-const { mockData } = require('../__mocks__/mockData');
+const {getMockData } = require('../__mocks__/mockData');
 
 describe('MMM-YNAB', () => {
     beforeAll(() => {
@@ -78,17 +78,17 @@ describe('MMM-YNAB', () => {
 
     });
 
-    describe('YNAB_UPDATE socket notification recieved', () => {
+    describe('YNAB_UPDATE socket notification recieved for correct budget id', () => {
         test('DOM is updated', () => {
-            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', mockData);
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE',getMockData());
 
             expect(MMMYNAB.updateDom).toHaveBeenCalledWith(0);
         })
 
         test('Results are recorded from payload', () => {
-            MMMYNAB.socketNotificationReceived('YNAB_UPDATE', mockData);
+            MMMYNAB.socketNotificationReceived('YNAB_UPDATE',getMockData());
 
-            expect(MMMYNAB.result).toBe(mockData);
+            expect(MMMYNAB.result).toStrictEqual(getMockData().budgets);
         });
     });
 
@@ -100,7 +100,7 @@ describe('MMM-YNAB', () => {
 
     describe('getDom with returned results', () => {
         test('Displays category budgets', () => {
-            MMMYNAB.result = mockData;
+            MMMYNAB.result =getMockData().budgets;
 
             var expectedHtml ='<div class="xsmall"><span class="ynab-name">Household</span><span class="ynab-balance">$10.00</span><span class="ynab-name">Pets</span><span class="ynab-balance">$2.00</span><span class="ynab-name">Grocery</span><span class="ynab-balance">$5.00</span><span class="ynab-name">Lunch</span><span class="ynab-balance">$7.50</span><span class="ynab-name">Kids Clothes</span><span class="ynab-balance">$3.00</span></div>'
 

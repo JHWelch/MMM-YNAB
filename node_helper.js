@@ -36,7 +36,10 @@ module.exports = NodeHelper.create({
 
             var list = payload.categories.map(a => map[a]).filter(a => a != undefined);
 
-            this.sendSocketNotification("YNAB_UPDATE", list);
+            this.sendSocketNotification("YNAB_UPDATE", {
+                budgets: list,
+                budgetId: payload.budgetId,
+            });
 		}).catch(e => {
 			console.log("error: " + e);
 		});
