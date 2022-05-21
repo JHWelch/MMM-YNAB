@@ -91,4 +91,20 @@ describe('MMM-YNAB', () => {
             expect(MMMYNAB.result).toBe(mockData);
         });
     });
+
+    describe('getDom with no result', () => {
+        test('Shows loading', () => {
+            expect(MMMYNAB.getDom().outerHTML).toBe('<div class="xsmall">Loading YNAB</div>');
+        });
+    });
+
+    describe('getDom with returned results', () => {
+        test('Displays category budgets', () => {
+            MMMYNAB.result = mockData;
+
+            var expectedHtml ='<div class="xsmall"><span class="ynab-name">Household</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Pets</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Grocery</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Lunch</span><span class="ynab-balance">$0.00</span><span class="ynab-name">Kids Clothes</span><span class="ynab-balance">$0.00</span></div>'
+
+            expect(MMMYNAB.getDom().outerHTML).toBe(expectedHtml);
+        });
+    })
 });

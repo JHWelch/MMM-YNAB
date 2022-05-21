@@ -20,9 +20,9 @@ Module.register("MMM-YNAB", {
         var wrapper = document.createElement("div");
         wrapper.classList = ["xsmall"];
         wrapper.innerHTML = "Loading YNAB";
-        if (this.result.items && this.result.items.length > 0) {
-            for (let i of this.result.items) {
-                wrapper.innerHTML = this.result.items.map(a => "<span class='ynab-name'>" + a.name + "</span><span class='ynab-balance'>$" + (a.balance/1000).toFixed(2) + "</span>").join('');
+        if (this.result && this.result.length > 0) {
+            for (let i of this.result) {
+                wrapper.innerHTML = this.result.map(a => "<span class='ynab-name'>" + a.name + "</span><span class='ynab-balance'>$" + (a.balance/1000).toFixed(2) + "</span>").join('');
             }
         }
         return wrapper;
