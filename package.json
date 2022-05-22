@@ -3,11 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ynab": "^1.21.0"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "setimmediate": "^1.0.5"
   }
 }

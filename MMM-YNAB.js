@@ -6,26 +6,34 @@ Module.register("MMM-YNAB", {
     },
 
     start: function () {
-        this.sendSocketNotification('YNAB_SET_CONFIG', this.config);
+        Log.info(`Starting module: ${this.name}`);
+        const self = this;
+
+        this.getData();
+
+        setInterval(() => {
+          self.getData();
+        }, 90000);
     },
 
     getDom: function () {
         var wrapper = document.createElement("div");
         wrapper.classList = ["xsmall"];
         wrapper.innerHTML = "Loading YNAB";
-        if (this.result.items && this.result.items.length > 0) {
-            for (let i of this.result.items) {
-                wrapper.innerHTML = this.result.items.map(a => "<span class='ynab-name'>" + a.name + "</span><span class='ynab-balance'>$" + (a.balance/1000).toFixed(2) + "</span>").join('');
+        if (this.result && this.result.length > 0) {
+            for (let i of this.result) {
+                wrapper.innerHTML = this.result.map(a => "<span class='ynab-name'>" + a.name + "</span><span class='ynab-balance'>$" + (a.balance/1000).toFixed(2) + "</span>").join('');
             }
         }
         return wrapper;
     },
 
     socketNotificationReceived: function (notification, payload) {
-        console.log("notification: " + notification);
-        console.log("payload: " + JSON.stringify(payload));
-        if (notification == "YNAB_UPDATE") {
-            this.result = payload;
+        if (
+            notification == "YNAB_UPDATE" &&
+            (!this.config.budgetId || this.config.budgetId == payload.budgetId)
+        ) {
+            this.result = payload.budgets;
             this.updateDom(0);
         }
     },
@@ -34,5 +42,9 @@ Module.register("MMM-YNAB", {
         return [
             this.file('MMM-YNAB.css')
         ]
+    },
+
+    getData: function() {
+        this.sendSocketNotification('YNAB_GET_DATA', this.config);
     }
 });
